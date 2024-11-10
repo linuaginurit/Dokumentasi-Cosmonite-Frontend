@@ -8,6 +8,7 @@ As a contributor, here are the guidelines we would like you to follow:
  - [Table](#table)
      1. [Basic Table](#basictable) 
      2. [Table With Custom Headers](#customheader) 
+     3. [Table With Link](#tablelink) 
 
 
 
@@ -177,6 +178,138 @@ Creating row spans and column spans involves customizing the header of the table
         🟢 columns dan body tetap tidak ada perubahan
         🟢 Rowspan = menggabungkan baris
         🟢 colspan = menggabungkan kolom
+
+
+## <a name="tablelink"></a> Table With Link
+if you wanna add link inside your table please modify ur body below 
+
+please add type : linkhref
+
+```shell
+        column = 
+        ...,{
+            "label": "Admin",
+            "value": "admin_count",
+            "align": "center",
+            "type": "linkhref"  # add this type
+            } ,...
+```
+
+add this configuration on your JSON body 
+
+ 
+```shell
+        body: [{
+            "kd_unit": "015.08",
+            "kd_satker": "527010",
+            "nm_satker": "KANTOR PUSAT DIREKTORAT JENDERAL PERBENDAHARAAN",
+            "tipe": "SETPBN",
+            "admin_count": [{routerLink: '../detailSummaryPenggunaSakti/527010/DITSMI/ROLE_ADMIN/PERAN',text: '3'}],
+            "operator_count": 0,
+            "validator_count": 0,
+            "approver_count": 0,
+            "aktif_count": [{routerLink: '../detailSummaryPenggunaSakti/527010/SETPBN/AKTIF/STATUS_DAFTAR',text: '7'}],
+            "non_aktif_count": 0,
+            "lainnya_count": 0
+            }]
+```
+
+please use object of [ ] that contains two value routerLink and text. 
+
+    1. The routerLink refers to the URL, i.e., your main URL:
+        http://10.100.244.153:5000/omon/layout/data-view/admang/admin/summaryPenggunaAplikasi.
+        - If you have a link that refers to a new function, such as summaryPenggunaAplikasiDetail, which is different from your main
+        function, you need to use a relative path by adding ../ to your routerLink value to bypass the main route. It will look like this:
+            ```diff
+            routerLink="../summaryPenggunaAplikasiDetail/527010/UNIT/PERAN".
+            ```
+        
+        - If your link is the same as your main function, then the routerLink should be:
+        
+            ```diff
+            routerLink="/527010/UNIT/PERAN".
+            ```
+
+        - If your link is totally different, change the link from the base URL by adding this
+            ```diff
+            /layout/data-view/pelaporan/persediaset/persediaanUnapproved/"
+            ```
+
+    2. The text refers to the values of your rows.
+
+🔴 notes : add toolbar for button back 
+
+![Image](https://github.com/user-attachments/assets/be28aaef-b4f2-463e-aac5-2c96d3be9f23)
+
+```shell
+        toolbar : [
+            {
+                "label": "Kembali",
+                "url": "/admservice/admin/summaryPenggunaAplikasi",
+                "icon": "fa fa-arrow-left"
+            }
+        ]
+```
+
+monlap request 
+![Image](https://github.com/user-attachments/assets/a7905d4d-73ea-413f-a318-44e18d7350a5)
+
+🔴 notes: 
+If the target link is a new tab, adjustments are needed in the body by adding the value target: '_blank'.
+Then, the process of writing the routerLink needs to be adjusted; previously, it was only at the function name level and now needs to be adjusted up to the repository name.
+```
+body=[
+                ...,
+                "detail": [{routerLink: '../monlap/ledger/detailRekonAtas/3/630931/04',text: 'Detail',target: '_blank'}],
+                ,...
+         ]
+```
+
+if you wanna add some icon on your link this is the update for your json body 
+```
+body=[
+               ...,"BAR": [{routerLink: '../monlap/ledger/BARekon/630931/04',text: 'Download',target: '_blank',class: 'fas fa-download'}],...
+            ]
+```
+
+🟢Recomendations 
+![Image](https://github.com/user-attachments/assets/db2025e6-beb1-4617-ad16-ea2e8d60f716)
+ To look more beautiful, we suggest using column actions as shown in the image above. This can be done by making the following adjustments. Add 'actions' to your main JSON.
+
+```shell
+        {
+            "subtitle": "Data Rekonsiliasi diperbarui setiap 6 jam, pembaruan terakhir pada: 24-10-2024 16:32<br>Penerbitan SHR diperbarui setiap jam, pembaruan terakhir pada: 24-10-2024 20:00",
+            "title": "Rekonsiliasi SAKTI - SPAN Sampai Dengan Periode 2024-09",
+            "column": [],
+            "body": [],
+            "split": 50,
+            "filters": "",
+            "toolbar": [],
+            "actions": [                            # add this value
+                {
+                    "event": "detail",
+                    "icon": "pi pi-sliders-h",
+                    "class": "p-button-rounded p-button-info p-button-sm",
+                    "label": "Lihat detail"
+                },
+                {
+                    "event": "download",
+                    "icon": "pi pi-download",
+                    "class": "p-button-rounded p-button-warning p-button-sm",
+                    "label": "Download"
+                }
+            ]
+        }
+```
+
+add value actions only on your json body without define it on columns
+```shell
+    body:[
+        {... ,"actions":[{detail:'../monlap/ledger/detailRekonAtas/3/630931/04',download:'../monlap/ledger/BARekon/630931/04'}],...}
+            ]
+```
+
+
 
 
 
